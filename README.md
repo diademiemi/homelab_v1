@@ -63,3 +63,8 @@ Most variables are set in [group_vars/all/main.yml](group_vars/all/main.yml) and
 I have encrypted my personal values with Ansible Vault and left them out of this repository.  
 
 In `host_vars/localhost/main.yml`, change `letsencrypt_directory` to `https://acme-v02.api.letsencrypt.org/directory` to get a trusted SSL certificate.  
+
+## License
+
+The files used to deploy my homelab are licensed under the [MIT License](./LICENSE).  
+I encourage you to take inspiration from my setup and learn wonderful tools like Ansible, Terraform and Kubernetes.
