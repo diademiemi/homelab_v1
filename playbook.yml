@@ -1,0 +1,19 @@
+- hosts: all
+
+  roles:
+  - users
+  - prepare
+  - k3s-cluster
+  tags: cluster
+
+- hosts: localhost
+  tasks:
+  - name: Wait betweend K3S install and deployment
+    pause:
+      seconds: 10
+
+- hosts: localhost
+
+  roles:
+  - k3s-deploy
+  tags: deploy

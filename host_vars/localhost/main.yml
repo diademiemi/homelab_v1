@@ -1,0 +1,58 @@
+helm_repos:
+  - name: k8s-at-home
+    url: https://k8s-at-home.com/charts
+  - name: hpe-storage
+    url: https://hpe-storage.github.io/co-deployments/
+  - name: truenas-csp
+    url: https://hpe-storage.github.io/truenas-csp/
+  - name: nfs-subdir-external-provisioner
+    url: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner
+  - name: bitnami
+    url: https://charts.bitnami.com/bitnami
+  - name: gitlab
+    url: https://charts.gitlab.io
+  - name: traefik
+    url: https://helm.traefik.io/traefik
+  - name: diademiemi
+    url: https://diademiemi.github.io/charts
+  - name: tribe29
+    url: https://tribe29.github.io/checkmk_kube_agent
+
+helm_charts:
+  - name: discord-bonebotqc
+    release: diademiemi/bonebot
+  - name: discord-free-cow
+    release: diademiemi/bonebot
+  - name: jellyfin
+    release: k8s-at-home/jellyfin
+  - name: joplin-db
+    release: bitnami/postgresql
+  - name: joplin
+    release: k8s-at-home/joplin-server
+  - name: vaultwarden-db
+    release: bitnami/postgresql
+  - name: vaultwarden
+    release: k8s-at-home/vaultwarden
+  - name: adguard-home
+    release: k8s-at-home/adguard-home
+  - name: checkmk-monitoring
+    namespace: checkmk-monitoring
+    release: tribe29/checkmk
+  - name: gitlab
+    release: gitlab/gitlab
+
+
+
+domain_name: "{{ vault_domain_name }}"
+cloudflare_email: "emilia@diademiemi.me"
+cloudflare_api_token: "{{ vault_cloudflare_api_token }}"
+letsencrypt_directory: https://acme-staging-v02.api.letsencrypt.org/directory
+
+truenas_ip: "10.100.0.1"
+truenas_external_ip: "192.168.100.130"
+truenas_secret: "{{ vault_truenas_secret }}"
+nfs_storage_path: "{{ vault_nfs_storage_path }}"
+
+joplin_db_pass: "{{ vault_joplin_db_pass }}"
+vaultwarden_db_pass: "{{ vault_vaultwarden_db_pass }}"
+vaultwarden_admin_token: "{{ vault_vaultwarden_admin_token }}"

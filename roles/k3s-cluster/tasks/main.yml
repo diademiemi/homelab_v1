@@ -1,0 +1,37 @@
+---
+- name: Download k3s binary x64
+  ansible.builtin.get_url:
+    url: https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/k3s
+    checksum: sha256:https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/sha256sum-amd64.txt
+    dest: /usr/local/bin/k3s
+    owner: root
+    group: root
+    mode: 0755
+
+- ansible.builtin.include_tasks: master.yml
+  tags: master
+- ansible.builtin.include_tasks: get-config.yml
+  tags: get-config
+- ansible.builtin.include_tasks: workers.yml
+  tags: nodes
+
+- name: Create kubectl symlink
+  ansible.builtin.file:
+    src: /usr/local/bin/k3s
+    dest: /usr/local/bin/kubectl
+    state: link
+
+- name: Create crictl symlink
+  ansible.builtin.file:
+    src: /usr/local/bin/k3s
+    dest: /usr/local/bin/crictl
+    state: link
+
+- name: Install Kubernetes volume dependencies
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+  - open-iscsi
+  - nfs-kernel-server
+  - nfs-common

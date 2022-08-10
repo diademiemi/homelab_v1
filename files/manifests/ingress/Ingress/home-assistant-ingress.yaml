@@ -1,0 +1,26 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: homeassistant-service
+  namespace: default
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: home.{{ domain_name }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: homeassistant-ip
+            port:
+              number: 8123 
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - home.{{ domain_name }}
+    secretName: wildcard-cert

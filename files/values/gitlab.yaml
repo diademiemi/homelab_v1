@@ -1,0 +1,43 @@
+global:
+  https: true
+  hosts:
+    domain: "{{ domain_name }}"
+  ingress:
+    class: traefik
+    enabled: true
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      traefik.ingress.kubernetes.io/router.tls: "true"
+    tls:
+      secretName: wildcard-cert
+    configureCertmanager: false
+certmanager:
+  install: false
+
+nginx-ingress:
+  controller:
+    extraArgs:
+      workaround: issue 2487
+  enabled: false
+
+gitlab:
+  gitaly:
+    persistence:
+      existingClaim: gitlab-gitaly-pvc
+      storageClass: nfs-client
+postgresql:
+  persistence:
+    existingClaim: gitlab-postgresql-pvc
+    storageClass: nfs-client
+minio:
+  persistence:
+    existingClaim: gitlab-minio-pvc
+    storageClass: nfs-client
+redis:
+  master:
+    persistence:
+      existingClaim: gitlab-redis-pvc
+      storageClass: nfs-client
+
+prometheus:
+  install: false

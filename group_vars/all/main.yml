@@ -1,0 +1,12 @@
+---
+old_root_password: linux
+new_root_password: "{{ vault_new_root_password }}"
+
+users:
+  - name: diademiemi
+    password: "{{ vault_new_user_password }}"
+    keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGSj6rJkx/d2w1c4qagmh7s/TJQHGOAanWprgiHzUKIW
+
+master_ip: 192.168.100.150
+extra_server_args: "--no-deploy traefik --no-deploy servicelb"

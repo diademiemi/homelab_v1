@@ -1,0 +1,9 @@
+---
+- name: Install charts
+  kubernetes.core.helm:
+    release_name: "{{ item.name }}"
+    chart_ref: "{{ item.release }}"
+    release_namespace: "{{ item.namespace | default('default')}}"
+    create_namespace: yes
+    values: "{{ lookup('template', 'files/values/{{ item.name }}.yaml') | from_yaml }}"
+  with_items: "{{ helm_charts }}"

@@ -1,0 +1,6 @@
+python_dependencies:
+- kubernetes 
+- PyYAML 
+- jsonpatch
+
+letsencrypt_directory: https://acme-staging-v02.api.letsencrypt.org/directory

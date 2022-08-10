@@ -1,0 +1,22 @@
+- block:
+  - name: Read k3s.yaml
+    ansible.builtin.slurp:
+      src: /etc/rancher/k3s/k3s.yaml
+    register: kubeconfig
+
+  - name: Copy config file to ansible host
+    ansible.builtin.copy:
+      content: "{{ kubeconfig.content | b64decode }}"
+      dest: "{{ kubeconfig_local_dest }}"
+      mode: "u=rw,g=,o="
+    delegate_to: localhost
+
+  - name: Replace https://localhost:6443 by https://master-ip:6443
+    ansible.builtin.command: >-
+      k3s kubectl config set-cluster default
+        --server=https://{{ master_ip }}:6443
+        --kubeconfig {{ kubeconfig_local_dest }}
+    changed_when: true
+    delegate_to: localhost
+    ignore_errors: true
+  when: k3s_role == "master"

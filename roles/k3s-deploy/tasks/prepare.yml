@@ -1,0 +1,12 @@
+---
+- name: Install Python dependencies
+  ansible.builtin.pip:
+    name: "{{ item }}"
+  loop: "{{ python_dependencies }}"
+
+- name: Add helm repositories
+  kubernetes.core.helm_repository:
+    name: "{{ item.name }}"
+    repo_url: "{{ item.url }}"
+  loop: "{{ helm_repos }}"
+

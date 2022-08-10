@@ -1,0 +1,42 @@
+---
+- name: Install NFS subdir provisioner
+  kubernetes.core.helm:
+    release_name: nfs-client
+    chart_ref: nfs-subdir-external-provisioner/nfs-subdir-external-provisioner
+    release_namespace: default
+    values: "{{ lookup('template', 'files/values/nfs-client.yaml') | from_yaml }}"
+
+- name: Install TrueNAS CSP provider
+  kubernetes.core.helm:
+    release_name: truenas-csp
+    chart_ref: truenas-csp/truenas-csp
+    release_namespace: hpe-storage
+    create_namespace: yes
+
+- name: Create TrueNAS Secret
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', '{{ item }}') | from_yaml }}"
+  with_lines:
+    - "find files/manifests/storage/Secret -type f -name '*.yaml' " # https://github.com/ansible/ansible/issues/17136#issuecomment-324112974 good enough
+
+- name: Create TrueNAS StorageClass
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', '{{ item }}') | from_yaml }}"
+  with_lines:
+    - "find files/manifests/storage/StorageClass -type f -name '*.yaml' " # https://github.com/ansible/ansible/issues/17136#issuecomment-324112974 good enough
+
+- name: Import PVs
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', '{{ item }}') | from_yaml }}"
+  with_lines:
+    - "find files/manifests/storage/PersistentVolume -type f -name '*.yaml' " # https://github.com/ansible/ansible/issues/17136#issuecomment-324112974 good enough
+
+- name: Import PVCs
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', '{{ item }}') | from_yaml }}"
+  with_lines:
+    - "find files/manifests/storage/PersistentVolumeClaim -type f -name '*.yaml' " # https://github.com/ansible/ansible/issues/17136#issuecomment-324112974 good enough

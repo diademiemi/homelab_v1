@@ -1,0 +1,32 @@
+# ingress:
+#   enabled: false
+  # className: "traefik-local"
+  # # annotations:
+  # #   nginx.ingress.kubernetes.io/rewrite-target: /
+  # hosts:
+  #   - host: checkmk-cluster-collector.lan
+  #     paths:
+  #       - path: /
+  #         pathType: Prefix
+  # tls: []
+  # #  - secretName: chart-example-tls
+  # #    hosts:
+  # #      - chart-example.local
+
+service:
+  # if required specify "NodePort" here to expose the cluster-collector via the "nodePort" specified below
+  type: NodePort
+  port: 8080
+  nodePort: 30035
+
+  # ingress:
+  #   enabled: true
+  #   className: "traefik-local"
+  #   annotations:
+  #     nginx.ingress.kubernetes.io/rewrite-target: /
+  #   hosts:
+  #     - host: checkmk-cluster-collector.lan
+  #       paths:
+  #         - path: /
+  #           pathType: Prefix
+  #   tls: []

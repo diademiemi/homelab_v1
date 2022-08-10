@@ -1,0 +1,52 @@
+---
+- name: Get MetalLB manifest
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/metallb/metallb/v0.13.4/config/manifests/metallb-native.yaml
+    dest: files/manifests/ingress/metallb-native-dl.yaml
+    mode: '0664'
+
+- name: Create MetalLB and wait for it to be ready
+  kubernetes.core.k8s:
+    state: present
+    src: "files/manifests/ingress/metallb-native-dl.yaml"
+    wait: yes
+
+- name: Create IPAddressPools
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', '{{ item }}') | from_yaml }}"
+    wait: yes
+  with_lines:
+    - "find files/manifests/ingress/IPAddressPool/* -type f -name '*.yaml' " # https://github.com/ansible/ansible/issues/17136#issuecomment-324112974 good enough
+
+- name: Create L2Advertisement
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', '{{ item }}') | from_yaml }}"
+    wait: yes
+  with_lines:
+    - "find files/manifests/ingress/L2Advertisement/* -type f -name '*.yaml' " # https://github.com/ansible/ansible/issues/17136#issuecomment-324112974 good enough
+
+- name: Install Traefik ingress
+  kubernetes.core.helm:
+    release_name: traefik
+    chart_ref: traefik/traefik
+    release_namespace: default
+    values: "{{ lookup('template', 'files/values/traefik.yaml') | from_yaml }}"
+    wait: yes
+
+- name: Create ingresses
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', '{{ item }}') | from_yaml }}"
+    wait: yes
+  with_lines:
+    - "find files/manifests/ingress/Ingress* -type f -name '*.yaml' " # https://github.com/ansible/ansible/issues/17136#issuecomment-324112974 good enough
+
+- name: Install Traefik ingress for lan
+  kubernetes.core.helm:
+    release_name: traefik-local
+    chart_ref: traefik/traefik
+    release_namespace: default
+    values: "{{ lookup('template', 'files/values/traefik-local.yaml') | from_yaml }}"
+    wait: yes

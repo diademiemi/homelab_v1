@@ -1,0 +1,22 @@
+---
+- name: Change root password.
+  ansible.builtin.user:
+    name: root
+    state: present
+    password: "{{ new_root_password }}"
+    update_password: always
+
+- name: Add users
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    state: present
+    password: "{{ item.password }}"
+    update_password: always
+  loop: "{{ users }}"
+
+- name: Add authorized keys
+  ansible.posix.authorized_key:
+    user: "{{ item.0.name }}"
+    state: present
+    key: "{{ item.1 }}"
+  loop: "{{ users | subelements('keys', 'skip_missing=True') }}"

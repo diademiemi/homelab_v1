@@ -1,0 +1,13 @@
+.vscode
+
+.terraform
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.lock.hcl
+
+k3s.yaml
+
+**/*-dl.yaml
+
+.vault-passwd
+**/vault.yml

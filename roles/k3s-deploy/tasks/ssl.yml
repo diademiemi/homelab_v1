@@ -1,0 +1,36 @@
+---
+- name: Get cert-manager.io manifest
+  ansible.builtin.get_url:
+    url: https://github.com/cert-manager/cert-manager/releases/download/v1.9.1/cert-manager.yaml
+    dest: files/manifests/ssl/cert-manager-dl.yaml
+    mode: '0664'
+
+- name: Create cert-manager and wait for it to be ready
+  kubernetes.core.k8s:
+    state: present
+    src: "files/manifests/ssl/cert-manager-dl.yaml"
+    wait: yes
+
+- name: Create Secrets
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', '{{ item }}') | from_yaml }}"
+    wait: yes
+  with_lines:
+    - "find files/manifests/ssl/Secret/* -type f -name '*.yaml' " # https://github.com/ansible/ansible/issues/17136#issuecomment-324112974 good enough
+
+- name: Create ClusterIssuers
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', '{{ item }}') | from_yaml }}"
+    wait: yes
+  with_lines:
+    - "find files/manifests/ssl/ClusterIssuer/* -type f -name '*.yaml' " # https://github.com/ansible/ansible/issues/17136#issuecomment-324112974 good enough
+
+- name: Create Certificates
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', '{{ item }}') | from_yaml }}"
+    wait: yes
+  with_lines:
+    - "find files/manifests/ssl/Certificate/* -type f -name '*.yaml' " # https://github.com/ansible/ansible/issues/17136#issuecomment-324112974 good enough

@@ -1,0 +1,32 @@
+---
+- block:
+
+  - name: Copy K3s service file on master
+    ansible.builtin.template:
+      src: "k3s.service.j2"
+      dest: "{{ systemd_dir }}/k3s.service"
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Enable and check K3s service on master
+    ansible.builtin.systemd:
+      name: k3s
+      daemon_reload: yes
+      state: restarted
+      enabled: yes
+
+  - name: Wait for node-token
+    ansible.builtin.wait_for:
+      path: "{{ k3s_server_location }}/server/node-token"
+
+  - name: Read node-token from master
+    ansible.builtin.slurp:
+      path: "{{ k3s_server_location }}/server/node-token"
+    register: node_token
+
+  - name: Store Master node-token
+    ansible.builtin.set_fact:
+      token: "{{ node_token.content | b64decode | regex_replace('\n', '') }}"
+
+  when: k3s_role == "master"
