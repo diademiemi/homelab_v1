@@ -44,7 +44,7 @@ helm_charts:
 
 
 domain_name: "{{ vault_domain_name }}"
-cloudflare_email: "emilia@diademiemi.me"
+cloudflare_email: "{{ vault_cloudflare_email }}"
 cloudflare_api_token: "{{ vault_cloudflare_api_token }}"
 letsencrypt_directory: https://acme-staging-v02.api.letsencrypt.org/directory
 
