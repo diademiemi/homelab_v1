@@ -28,13 +28,13 @@ ingress:
       traefik.ingress.kubernetes.io/router.tls: "true"
     enabled: true
     hosts:
-      - host: me.{{ domain_name }}
+      - host: media.{{ domain_name }}
         paths:
           - path: /
             pathType: Prefix
     tls:
       - hosts:
-        - me.{{ domain_name }}
+        - media.{{ domain_name }}
         secretName: wildcard-cert
 
 # -- Configure persistence settings for the chart under this key.
