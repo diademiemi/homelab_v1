@@ -20,11 +20,12 @@ nginx-ingress:
       workaround: issue 2487
   enabled: false
 
+# Fuck this shit
+# This kinda seems to work, not touching it again
 gitlab:
   gitaly:
     persistence:
       existingClaim: gitlab-gitaly-pvc
-      storageClass: nfs-client
 postgresql:
   persistence:
     existingClaim: gitlab-postgresql-pvc
@@ -37,7 +38,6 @@ redis:
   master:
     persistence:
       existingClaim: gitlab-redis-pvc
-      storageClass: nfs-client
 
 prometheus:
   install: false

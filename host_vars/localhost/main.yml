@@ -19,6 +19,8 @@ helm_repos:
     url: https://tribe29.github.io/checkmk_kube_agent
 
 helm_charts:
+  - name: gitlab
+    release: gitlab/gitlab
   - name: discord-bonebotqc
     release: diademiemi/bonebot
   - name: discord-free-cow
@@ -38,15 +40,12 @@ helm_charts:
   - name: checkmk-monitoring
     namespace: checkmk-monitoring
     release: tribe29/checkmk
-  - name: gitlab
-    release: gitlab/gitlab
-
 
 
 domain_name: "{{ vault_domain_name }}"
 cloudflare_email: "{{ vault_cloudflare_email }}"
 cloudflare_api_token: "{{ vault_cloudflare_api_token }}"
-letsencrypt_directory: https://acme-staging-v02.api.letsencrypt.org/directory
+letsencrypt_directory: https://acme-v02.api.letsencrypt.org/directory
 
 truenas_ip: "10.100.0.1"
 truenas_external_ip: "192.168.100.130"
