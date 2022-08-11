@@ -8,4 +8,4 @@
 - ansible.builtin.import_tasks: ingress.yml
   tags: ingress
 - ansible.builtin.import_tasks: charts.yml
-  tags: charts
+  tags: chartsz
