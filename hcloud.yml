@@ -1,0 +1,7 @@
+# requires env.HCLOUD_TOKEN
+
+plugin: hetzner.hcloud.hcloud
+locations:
+  - nbg1
+status:
+  - running
