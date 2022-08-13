@@ -19,3 +19,7 @@
 .vault-passwd
 **/vault.yml
 **/*secrets*.tfvars
+
+# Generated wg configs
+wg-configs/*
+wg-configs/**
