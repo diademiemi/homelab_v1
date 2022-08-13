@@ -5,7 +5,9 @@ The VMs are running on TrueNAS Scale with libvirt. TrueNAS Scale also acts as an
 
 ## Terraform
 
-The VMs are deployed with Terraform in [main.tf](./main.tf).  
+The VMs are deployed with Terraform on libvirt alongside a VPS on Hetzner Cloud.
+
+### Libvirt
 To connect to TrueNAS's libvirt socket, run:  
 `nc -kl -c 'ssh truenas "nc -U /run/truenas_libvirt/libvirt-sock"' 127.0.0.1 5000`  
 ###### Replace truenas with your truenas host
@@ -31,11 +33,22 @@ The VMs that are deployed will have the hostnames:
 - `k3s-worker02`  
 - `k3s-worker03`  
 
+### Hetzner
+A stepping stone / reverse proxy server is also deploye on Hetzner. This server proxies traffic from a public IP to the cluster through a Wireguard VPN.  
+Create a project on hetzner and get an API token. Create a file `terraform/secrets.auto.tfvars` with the content:  
+```tfvars
+hcloud_token = "xxx"
+ssh_pub_key = "Your SSH public key" # Used to log in
+```
+
 ## Ansible
 
-Ansible uses inventory.ini to connect to the created virtual machines to:  
+Ansible uses inventory.ini to connect to the created virtual machines and VPS to:  
 - Set the root password
-- Create a user
+- Update Cloudflare DNS records
+- Create Wireguard VPN tunnel between homelab VMs and VPS
+- Generate Wireguard configs for clients, if given, to access LAN from the internet
+- Set up Nginx traffic forwarder / proxy
 - Update packages
 - Install K3S
 - Set up a Kubernetes cluster
@@ -49,14 +62,14 @@ Ansible uses inventory.ini to connect to the created virtual machines to:
 
 Files in the `files/` directory are read as templates. This allows me to insert variables in a Jinja2 syntax. This way I can store variables like API keys, domain names and other secrets in Ansible Vault while still sharing my Kubernetes definitions for others to see.  
 
-To 
-
 ## Kubernetes
 
 MetalLB will be used as a loadbalancer. Traefik and AdGuard Home will make use of this.
 
 An instance of Traefik will be deployed for public-facing services. This will be available at `192.168.100.160`, I port forward this IP on ports 80/tcp and 443/tcp. Another will be deployed at `192.168.100.161` for services that should only be accessible on LAN.  
 AdGuard Home will listen on port 53/udp on `192.168.100.163`.  
+
+These IPs are configurable in [group_vars/all/main.yml](group_vars/all/main.yml)  
 
 ## Variables
 Most variables are set in [group_vars/all/main.yml](group_vars/all/main.yml) and [host_vars/localhost/main.yml](host_vars/localhost/main.yml).  
