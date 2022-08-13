@@ -1,0 +1,13 @@
+- name: "Create record pointing to nginx host"
+  community.general.cloudflare_dns:
+    zone: "{{ domain_name }}"
+    record: "{{ item }}"
+    type: A
+    value: "{{ hostvars[nginx_host].ansible_default_ipv4.address }}"
+    api_token: "{{ cloudflare_api_token | b64decode }}"
+    solo: true
+    proxied: false
+  when: inventory_hostname == "localhost"
+  with_items:
+  - "@"
+  - "*"
