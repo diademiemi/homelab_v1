@@ -1,0 +1,22 @@
+---
+wireguard_peer: step01
+wireguard_master: step02
+
+wireguard_subnet: 192.168.150.0/23
+wireguard_master_ip: 192.168.150.1/23
+wireguard_peer_ip: 192.168.150.2/23
+wireguard_port: 51820
+
+wireguard_allowed_ips: "{{ wireguard_subnet }}"
+
+sysctl_values:
+  - name: net.ipv4.ip_forward
+    value: 1
+
+wireguard_peers: "{{ vault_wireguard_peers }}"
+
+# vault_wireguard_peers:
+#   - name: PC
+#     pubkey: "xxx"
+#     privkey: "xxx"
+#     ip: "192.168.150.100/23"

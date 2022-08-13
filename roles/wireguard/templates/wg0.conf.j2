@@ -1,0 +1,31 @@
+[Interface]
+Address = {{ my_ip }}
+{% if wireguard_master == inventory_hostname %}
+ListenPort = {{ wireguard_port }}
+{% endif %}
+PrivateKey = {{ my_private_key }}
+{% if wireguard_peer == inventory_hostname %}
+PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o {{ wireguard_network_interface_name }} -j MASQUERADE
+PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o {{ wireguard_network_interface_name }} -j MASQUERADE
+{% endif %}
+
+[Peer]
+PublicKey = {{ other_public_key }}
+{% if wireguard_peer == inventory_hostname %}
+AllowedIPs = {{ hostvars[wireguard_master].wireguard_allowed_ips }}
+{% else %}
+AllowedIPs = {{ hostvars[wireguard_peer].wireguard_allowed_ips }}
+{% endif %}
+PersistentKeepalive = 25
+{% if wireguard_master != inventory_hostname %}
+Endpoint = {{ hostvars[wireguard_master].ansible_default_ipv4.address }}:{{ wireguard_port }}
+{% endif %}
+
+{% if wireguard_peers is defined and wireguard_master == inventory_hostname %}
+{% for peer in wireguard_peers %}
+[Peer] # {{ peer.name }}
+PublicKey = {{ peer.pubkey }}
+AllowedIPs = {{ peer.ip }}
+PersistentKeepalive = 25
+{% endfor %}
+{% endif %}

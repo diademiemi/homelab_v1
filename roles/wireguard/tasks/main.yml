@@ -1,0 +1,87 @@
+---
+- name: "Install Wireguard"
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items:
+  - wireguard
+  - wireguard-tools
+  when: inventory_hostname != "localhost"
+
+- name: "Generate private key for master"
+  ansible.builtin.shell: |
+    wg genkey
+  register: master_private_key
+  when: wireguard_master == inventory_hostname
+
+- name: "Generate public key for master"
+  ansible.builtin.shell: |
+    echo {{ master_private_key.stdout_lines[0] }} | wg pubkey
+  register: master_public_key
+  when: wireguard_master == inventory_hostname
+
+- name: "Generate private key for peer"
+  ansible.builtin.shell: |
+    wg genkey
+  register: peer_private_key
+  when: wireguard_peer == inventory_hostname
+
+- name: "Generate public key for peer"
+  ansible.builtin.shell: |
+    echo {{ peer_private_key.stdout_lines[0] }} | wg pubkey
+  register: peer_public_key
+  when: wireguard_peer == inventory_hostname
+
+- name: "Create wg0.conf on wireguard master"
+  ansible.builtin.template:
+    src: wg0.conf.j2
+    dest: "/etc/wireguard/wg0.conf"
+    owner: root
+    group: root
+    mode: 0600
+  vars:
+    my_ip: "{{ wireguard_master_ip }}"
+    my_private_key: "{{ hostvars[wireguard_master].master_private_key.stdout_lines[0] }}"
+    other_public_key: "{{ hostvars[wireguard_peer].peer_public_key.stdout_lines[0] }}"
+  when: wireguard_master == inventory_hostname
+
+- name: "Create wg0.conf on wireguard master"
+  ansible.builtin.template:
+    src: wg0.conf.j2
+    dest: "/etc/wireguard/wg0.conf"
+    owner: root
+    group: root
+    mode: 0600
+  vars:
+    my_ip: "{{ wireguard_peer_ip }}"
+    my_private_key: "{{ hostvars[wireguard_peer].peer_private_key.stdout_lines[0] }}"
+    other_public_key: "{{ hostvars[wireguard_master].master_public_key.stdout_lines[0] }}"
+  when: wireguard_peer == inventory_hostname
+
+- name: "Enable wireguard"
+  ansible.builtin.service:
+    name: 'wg-quick@wg0'
+    state: restarted
+    enabled: yes
+  when: inventory_hostname != "localhost"
+
+- name: "Create wireguard configs directory on localhost"
+  ansible.builtin.file:
+    dest: ./wg-configs
+    state: directory
+    mode: 0700
+  when: wireguard_peers is defined and inventory_hostname == "localhost"
+
+- name: "Generate wireguard configs on localhost"
+  ansible.builtin.template:
+    src: wg0.conf.j2
+    dest: ./wg-configs/{{ item.name }}.conf
+    mode: 0600
+  vars:
+    my_ip: "{{ item.ip }}"
+    my_private_key: "{{ item.privkey }}"
+    other_public_key: "{{ hostvars[wireguard_master].master_public_key.stdout_lines[0] }}"
+  with_items: "{{ wireguard_peers }}"
+  when: wireguard_peers is defined and inventory_hostname == "localhost"
+  no_log: true
