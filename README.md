@@ -1,7 +1,8 @@
 # Homelab setup from diademiemi
 
 This is my homelab setup.  
-The VMs are running on TrueNAS Scale with libvirt. TrueNAS Scale also acts as an NFS and iSCSI server for persistent storage on the containers.  
+The VMs are running on TrueNAS Scale with libvirt. A Hetzner VPS is also used to proxy traffic from a public IP to the cluster over a Wireguard VPN tunnel.
+TrueNAS Scale also acts as an NFS and iSCSI server for persistent storage on the Kubernetes containers.  
 
 ## Terraform
 
@@ -32,6 +33,7 @@ The VMs that are deployed will have the hostnames:
 - `k3s-worker01`  
 - `k3s-worker02`  
 - `k3s-worker03`  
+- `step01`
 
 ### Hetzner
 A stepping stone / reverse proxy server is also deploye on Hetzner. This server proxies traffic from a public IP to the cluster through a Wireguard VPN.  
@@ -40,6 +42,8 @@ Create a project on hetzner and get an API token. Create a file `terraform/secre
 hcloud_token = "xxx"
 ssh_pub_key = "Your SSH public key" # Used to log in
 ```
+
+A VPS named `step02` will be created on Hetzner cloud.
 
 ## Ansible
 
