@@ -1,4 +1,11 @@
 ---
+- name: Full upgrade
+  ansible.builtin.apt:
+    name: '*'
+    state: latest
+    update_cache: yes
+  when: ansible_os_family == 'Debian'
+
 - name: Set sysctl values
   ansible.posix.sysctl:
     name: "{{ item.name }}"
@@ -6,10 +13,3 @@
     state: present
     reload: yes
   loop: "{{ sysctl_values }}"
-
-- name: Full upgrade
-  ansible.builtin.apt:
-    name: '*'
-    state: latest
-    update_cache: yes
-  when: ansible_os_family == 'Debian'
