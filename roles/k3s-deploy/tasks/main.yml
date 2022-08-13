@@ -1,6 +1,6 @@
 ---
 - ansible.builtin.import_tasks: prepare.yml
-  tags: never, prepare
+  tags: never, prepare-k3s
 - ansible.builtin.import_tasks: ssl.yml
   tags: ssl
 - ansible.builtin.import_tasks: storage.yml
