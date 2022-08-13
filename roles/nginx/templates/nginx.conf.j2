@@ -1,0 +1,45 @@
+user www-data;
+worker_processes auto;
+pid /run/nginx.pid;
+include /etc/nginx/modules-enabled/*.conf;
+
+events {
+        worker_connections 768;
+        # multi_accept on;
+}
+
+# Proxy all traffic to traefik
+stream {
+
+    upstream traefik_https {
+        server {{ traefik_ip }}:443;
+    }
+
+    upstream adguard_home_dns {
+        server {{ adguard_home_ip }}:53;
+    }
+
+    server {
+        listen 443;
+        proxy_pass traefik_https;
+    }
+
+    server {
+        listen 53 udp;
+        proxy_pass adguard_home_dns;
+    }
+
+}
+
+# Redirect HTTP to HTTPS before it reaches Traefik
+http {
+
+    server {
+
+        listen 80;
+
+        return 301 https://$host$request_uri;
+
+    }
+
+}

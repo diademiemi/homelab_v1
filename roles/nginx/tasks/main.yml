@@ -1,0 +1,21 @@
+---
+- name: "Install nginx"
+  ansible.builtin.apt:
+    name: "nginx"
+    state: latest
+
+- name: "Remove default nginx config"
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: "Create nginx config"
+  ansible.builtin.template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+
+- name: "Enable and restart nginx"
+  ansible.builtin.service:
+    name: nginx
+    state: restarted
+    enabled: yes

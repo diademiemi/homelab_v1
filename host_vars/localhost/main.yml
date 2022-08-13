@@ -19,8 +19,8 @@ helm_repos:
     url: https://tribe29.github.io/checkmk_kube_agent
 
 helm_charts:
-  - name: gitlab
-    release: gitlab/gitlab
+  # - name: gitlab
+  #   release: gitlab/gitlab
   - name: discord-bonebotqc
     release: diademiemi/bonebot
   - name: discord-free-cow
@@ -55,3 +55,5 @@ nfs_media_path: "{{ vault_nfs_media_path }}"
 joplin_db_pass: "{{ vault_joplin_db_pass }}"
 vaultwarden_db_pass: "{{ vault_vaultwarden_db_pass }}"
 vaultwarden_admin_token: "{{ vault_vaultwarden_admin_token }}"
+
+nginx_host: step02
