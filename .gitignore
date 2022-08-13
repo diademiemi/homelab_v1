@@ -1,15 +1,21 @@
+# IDE stuff
 .vscode
 
-.terraform
-terraform.tfstate
-terraform.tfstate.lock
-.terraform.tfstate.lock.info
-terraform.tfstate.backup
-.terraform.lock.hcl
+# Terraform state files
+**/.terraform
+**/terraform.tfstate
+**/terraform.tfstate.lock
+**/.terraform.tfstate.lock.info
+**/terraform.tfstate.backup
+**/.terraform.lock.hcl
 
-k3s.yaml
+# Kubeconfs
+**/k3s.yaml
 
+# Manifests downloaded by ansible
 **/*-dl.yaml
 
+# Secrets
 .vault-passwd
 **/vault.yml
+**/*secrets*.tfvars
