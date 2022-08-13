@@ -13,7 +13,7 @@ service:
   # type, selector or ports entries.
   spec:
     # externalTrafficPolicy: Cluster
-    loadBalancerIP: "192.168.100.161" # this should be your Metal LB IP
+    loadBalancerIP: "{{ traefik_local_ip }}" # this should be your Metal LB IP
     # clusterIP: "2.3.4.5"
   loadBalancerSourceRanges: []
     # - 192.168.0.1/32

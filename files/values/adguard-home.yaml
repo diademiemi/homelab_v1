@@ -31,7 +31,7 @@ service:
   dns-udp:
     enabled: true
     type: LoadBalancer
-    loadBalancerIP: 192.168.100.163
+    loadBalancerIP: "{{ adguard_home_ip }}"
     ports:
       dns-udp:
         enabled: true
@@ -148,9 +148,9 @@ config: |
     cache_time: 30
     rewrites:
     - domain: '*.lan'
-      answer: 192.168.100.161
+      answer: {{ traefik_local_ip }}
     - domain: '*.{{ domain_name }}'
-      answer: 192.168.100.160
+      answer: {{ traefik_ip }}
     - domain: truenas.lan
       answer: {{ truenas_external_ip }}
     blocked_services: []

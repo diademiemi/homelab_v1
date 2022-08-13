@@ -10,3 +10,7 @@ users:
 
 master_ip: 192.168.100.150
 extra_server_args: "--no-deploy traefik --no-deploy servicelb"
+
+traefik_ip: 192.168.100.160
+traefik_local_ip: 192.168.100.161
+adguard_home_ip: 192.168.100.163
