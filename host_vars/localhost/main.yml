@@ -51,7 +51,7 @@ truenas_ip: "10.100.0.1"
 truenas_external_ip: "192.168.100.130"
 truenas_secret: "{{ vault_truenas_secret }}"
 nfs_storage_path: "{{ vault_nfs_storage_path }}"
-
+nfs_media_path: "{{ vault_nfs_media_path }}"
 joplin_db_pass: "{{ vault_joplin_db_pass }}"
 vaultwarden_db_pass: "{{ vault_vaultwarden_db_pass }}"
 vaultwarden_admin_token: "{{ vault_vaultwarden_admin_token }}"

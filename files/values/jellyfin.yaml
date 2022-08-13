@@ -12,6 +12,15 @@ env:
   # -- Set the container timezone
   TZ: "Europe/Amsterdam"
 
+image:
+  # -- image repository
+  repository: jellyfin/jellyfin
+  # -- image tag
+  # @default -- chart.appVersion
+  tag: latest
+  # -- image pull policy
+  pullPolicy: IfNotPresent
+
 # -- Configures service settings for the chart.
 # @default -- See values.yaml
 service:
@@ -56,10 +65,32 @@ persistence:
     size: 1500Gi
     accessMode: ReadWriteMany
     readOnly: false
-    mountPath: /storage/files
+    mountPath: /storage/media
     volumeSpec:
       nfs:
-        path: /mnt/Berdly/Media
+        path: "{{ nfs_media_path }}/Media"
+        server: "{{ truenas_ip }}"
+  music:
+    enabled: true
+    type: custom
+    size: 1500Gi
+    accessMode: ReadWriteMany
+    readOnly: false
+    mountPath: /storage/files/Music
+    volumeSpec:
+      nfs:
+        path: "{{ nfs_media_path }}/Files/Music"
+        server: "{{ truenas_ip }}"
+  pictures:
+    enabled: true
+    type: custom
+    size: 1500Gi
+    accessMode: ReadWriteMany
+    readOnly: false
+    mountPath: /storage/files/Pictures
+    volumeSpec:
+      nfs:
+        path: "{{ nfs_media_path }}/Files/Pictures"
         server: "{{ truenas_ip }}"
 
 # -- Configure the Security Context for the Pod
