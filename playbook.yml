@@ -1,17 +1,61 @@
-- hosts: all
+##
+# Set sysctl values and create users
+##
+- hosts: all, !localhost
 
   roles:
-  - users
   - prepare
+  - users
+  tags: prepare
+
+##
+# Update DNS records
+##
+- hosts: localhost, nginx # nginx host included to get ansible fact for IP address
+
+  roles:
+  - cloudflare-dns
+  tags: cloudflare-dns
+
+##
+# Create Wireguard VPN tunnel between Hetzner VPS and cluster
+##
+- hosts: step, localhost # Localhost to write wg-quick configs
+
+  roles:
+  - wireguard
+  tags: wireguard
+
+##
+# Set up Nginx reverse proxy. Forwards traffic
+##
+- hosts: nginx
+
+  roles:
+  - nginx
+  tags: nginx
+
+##
+# Set up K3S cluster
+##
+- hosts: k3s
+
+  roles:
   - k3s-cluster
   tags: cluster
 
+##
+# Wait
+##
 - hosts: localhost
   tasks:
   - name: Wait betweend K3S install and deployment
     pause:
       seconds: 10
 
+##
+# Deploy to cluster
+##
 - hosts: localhost
 
   roles:
