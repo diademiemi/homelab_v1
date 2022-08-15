@@ -1,0 +1,64 @@
+#
+# IMPORTANT NOTE
+#
+# This chart inherits from our common library chart. You can check the default values/options here:
+# https://github.com/k8s-at-home/library-charts/tree/main/charts/stable/common/values.yaml
+#
+
+image:
+  # -- image repository
+  repository: ghcr.io/diademiemi/dropspace
+  # -- image tag
+  # @default -- chart.appVersion
+  tag: "1.0.0"
+  # -- image pull policy
+  pullPolicy: IfNotPresent
+
+# -- environment variables.
+# @default -- See below
+env:
+  # -- Set the container timezone
+  TZ: UTC
+  APP_URL: https://share.{{ domain_name }}
+  ASSET_URL: https://share.{{ domain_name }}
+  APP_KEY: "{{ dropspace_app_key }}"
+  APP_ENV: production
+  DB_CONNECTIONS: mysql
+  DB_HOST: dropspace-db-mysql
+  DB_PORT: 3306
+  DB_DATABASE: dropspace
+  DB_USERNAME: dropspace
+  DB_PASSWORD: "{{ dropspace_db_pass }}"
+
+ingress:
+  # -- Enable and configure ingress settings for the chart under this key.
+  # @default -- See values.yaml
+  main:
+    ingressClassName: traefik
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      traefik.ingress.kubernetes.io/router.tls: "true"
+    enabled: true
+    hosts:
+      - host: share.{{ domain_name }}
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - hosts:
+        - share.{{ domain_name }}
+        secretName: wildcard-cert
+
+
+persistence:
+  data:
+    enabled: true
+    mountPath: /app/dropspace/storage/app
+    type: custom
+    size: 50Gi
+    accessMode: ReadWriteOnce
+    readOnly: false
+    volumeSpec:
+      nfs:
+        path: "{{ nfs_storage_path }}/named-dropspace-data"
+        server: "{{ truenas_ip }}"

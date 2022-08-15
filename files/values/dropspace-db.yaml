@@ -1,0 +1,23 @@
+# helm install joplin-db bitnami/postgresql -f values/joplin-db.yaml
+
+## @section Global parameters
+## Please, note that this will override the parameters, including dependencies, configured to use the global value
+##
+
+
+auth:
+  username: "dropspace"
+  ## @param auth.password Password for the custom user to create. Ignored if `auth.existingSecret` with key `password` is provided
+  ##
+  password: "{{ dropspace_db_pass }}"
+  ## @param auth.database Name for a custom database to create
+  ##
+  database: "dropspace"
+  ## @param auth.replicationUsername Name of the replication user
+  ##
+
+primary: 
+  service:
+    type: ClusterIP
+  persistence:
+    existingClaim: dropspace-db-pvc
