@@ -12,6 +12,6 @@ spec:
     path: "{{ nfs_storage_path }}/named-gitlab-redis-data"
     server: "{{ truenas_ip }}"
   storageClassName: nfs-client
-  claimRef:
-    namespace: default
-    name: gitlab-redis-pvc
+  # claimRef:
+  #   namespace: default
+  #   name: gitlab-redis-pvc

@@ -12,6 +12,6 @@ spec:
     path: "{{ nfs_storage_path }}/named-gitlab-postgresql-data"
     server: "{{ truenas_ip }}"
   storageClassName: nfs-client
-  claimRef:
-    namespace: default
-    name: gitlab-postgresql-pvc
+  # claimRef:
+  #   namespace: default
+  #   name: gitlab-postgresql-pvc

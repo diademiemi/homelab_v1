@@ -1,5 +1,6 @@
 global:
   https: true
+  edition: ce
   hosts:
     domain: "{{ domain_name }}"
   ingress:
@@ -11,6 +12,7 @@ global:
     tls:
       secretName: wildcard-cert
     configureCertmanager: false
+
 certmanager:
   install: false
 
@@ -25,19 +27,21 @@ nginx-ingress:
 gitlab:
   gitaly:
     persistence:
-      existingClaim: gitlab-gitaly-pvc
+      volumeName: gitlab-gitaly-pv
+      storageClass: nfs-client
 postgresql:
   persistence:
-    existingClaim: gitlab-postgresql-pvc
+    volumeName: gitlab-postgresql-pv
     storageClass: nfs-client
 minio:
   persistence:
-    existingClaim: gitlab-minio-pvc
+    volumeName: gitlab-minio-pv
     storageClass: nfs-client
 redis:
   master:
     persistence:
-      existingClaim: gitlab-redis-pvc
+      volumeName: gitlab-redis-pv
+      storageClass: nfs-client
 
 prometheus:
   install: false
