@@ -15,6 +15,7 @@ auth:
   database: "dropspace"
   ## @param auth.replicationUsername Name of the replication user
   ##
+  rootPassword: "{{ dropspace_db_pass }}"
 
 primary: 
   service:

@@ -10,9 +10,9 @@ image:
   repository: ghcr.io/diademiemi/dropspace
   # -- image tag
   # @default -- chart.appVersion
-  tag: "1.0.0"
+  tag: "2022-08-16"
   # -- image pull policy
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 # -- environment variables.
 # @default -- See below
@@ -22,7 +22,8 @@ env:
   APP_URL: https://share.{{ domain_name }}
   ASSET_URL: https://share.{{ domain_name }}
   APP_KEY: "{{ dropspace_app_key }}"
-  APP_ENV: production
+  APP_ENV: local
+  APP_DEBUG: true
   DB_CONNECTIONS: mysql
   DB_HOST: dropspace-db-mysql
   DB_PORT: 3306
