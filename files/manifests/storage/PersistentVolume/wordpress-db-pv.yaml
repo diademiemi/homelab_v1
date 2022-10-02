@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: gitlab-redis-pv
+  name: wordpress-db-pv
   namespace: default
 spec:
   accessModes:
@@ -9,9 +9,9 @@ spec:
   capacity:
     storage: 15Gi
   nfs:
-    path: "{{ nfs_storage_path }}/named-gitlab-redis-data"
+    path: "{{ nfs_storage_path }}/named-wordpress-mysql-data"
     server: "{{ truenas_ip }}"
   storageClassName: nfs-client
   claimRef:
     namespace: default
-    name: redis-data-gitlab-redis-master-0
+    name: wordpress-db-pvc

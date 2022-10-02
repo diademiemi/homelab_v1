@@ -29,6 +29,20 @@ gitlab:
     persistence:
       volumeName: gitlab-gitaly-pv
       storageClass: nfs-client
+
+# Postgres seems to not work correctly at the moment.
+# The first deploy will fail since the btree_gist extension requires root to create.
+# This can be done manually with the following:
+# kubectl describe pod gitlab-postgres-0
+# Get the node this pod is running on, SSH to it
+# Run `runc --root /run/containerd/runc/k8s.io/ exec -t --user 0 <CONTAINER ID> psql --user postgres`
+# It will prompt for a password, get this password by running: 
+#`kubectl get secret gitlab-postgresql-password -o jsonpath="{.data['postgresql\-postgres\-password']}" | base64 --decode`
+# You are now in a Postgres shell, run the following:
+## \c gitlabhq_production
+## CREATE EXTENSION IF NOT EXISTS btree_gist;
+## CREATE EXTENSION IF NOT EXISTS pg_trgm;
+# Redeploy the GitLab helm chart and now it should correctly migrate the DB and install GitLab
 postgresql:
   persistence:
     volumeName: gitlab-postgresql-pv
