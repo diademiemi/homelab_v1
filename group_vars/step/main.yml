@@ -19,4 +19,3 @@ wireguard_peers: "{{ vault_wireguard_peers }}"
 #   - name: PC
 #     pubkey: "xxx"
 #     privkey: "xxx"
-#     ip: "192.168.150.100/23"
