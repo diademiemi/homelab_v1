@@ -10,7 +10,7 @@ image:
   repository: ghcr.io/diademiemi/dropspace
   # -- image tag
   # @default -- chart.appVersion
-  tag: "2022-08-16"
+  tag: "2a9688dc10f5333b8cea221ad381783d9704f625"
   # -- image pull policy
   pullPolicy: Always
 
@@ -56,7 +56,7 @@ persistence:
     enabled: true
     mountPath: /app/dropspace/storage/app
     type: custom
-    size: 50Gi
+    size: 100Gi
     accessMode: ReadWriteOnce
     readOnly: false
     volumeSpec:
