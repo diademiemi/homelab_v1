@@ -21,6 +21,8 @@ helm_repos:
 helm_charts:
   - name: gitlab
     release: gitlab/gitlab
+  - name: site
+    release: diademiemi/site
   - name: discord-bonebotqc
     release: diademiemi/bonebot
   - name: discord-free-cow
@@ -62,3 +64,8 @@ vaultwarden_db_pass: "{{ vault_vaultwarden_db_pass }}"
 vaultwarden_admin_token: "{{ vault_vaultwarden_admin_token }}"
 dropspace_app_key: "{{ vault_dropspace_app_key }}"
 nginx_host: step02
+site_image: "{{ vault_site_image }}"
+# wip
+wordpress_db_pass: "{{ vault_wordpress_db_pass }}"
+wordpress_db_name: "{{ vault_wordpress_db_name }}"
+wordpress_domain: "{{ vault_wordpress_domain }}"

@@ -1,0 +1,32 @@
+# -- environment variables. See [image docs](https://jellyfin.org/docs/general/administration/configuration.html) for more details.
+# @default -- See below
+env:
+  # -- Set the container timezone
+  TZ: "Europe/Amsterdam"
+  WORDPRESS_DB_HOST: wordpress-db-mysql
+  WORDPRESS_DB_USER: db
+  WORDPRESS_DB_PASSWORD: "{{ wordpress_db_pass }}"
+  WORDPRESS_DB_NAME: "{{ wordpress_db_name }}"
+
+# -- Configures service settings for the chart.
+# @default -- See values.yaml
+service:
+  main:
+    ports:
+      http:
+        port: 3306
+
+# -- Configure persistence settings for the chart under this key.
+# @default -- See values.yaml
+persistence:
+  mysql:
+    enabled: true
+    type: custom
+    size: 15Gi
+    accessMode: ReadWriteMany
+    readOnly: false
+    mountPath: /var/lib/mysql
+    volumeSpec:
+      nfs:
+        path: "{{ nfs_storage_path }}/named-wordpress-db-data"
+        server: "{{ truenas_ip }}"
