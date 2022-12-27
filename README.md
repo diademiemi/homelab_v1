@@ -1,3 +1,7 @@
+# ARCHIVED
+This was the first homelab setup I did where I used DevOps tooling to achieve my goals. 
+I am trying something new, and archiving this repository in favour of [diademiemi/homelab_v2](https://github.com/diademiemi/homelab_v2)!  
+
 # Homelab setup from diademiemi
 
 This is my homelab setup.  
